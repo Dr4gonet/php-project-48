@@ -1,0 +1,24 @@
+{
+    "name": "hexlet/code",
+    "description": "study project",
+    "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Dr4gonet",
+            "email": "dr4gonet@yandex.ru"
+        }
+    ],
+    "bin": [
+        "bin/gendiff"
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^1.10"
+    }
+}
