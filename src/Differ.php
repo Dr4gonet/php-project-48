@@ -50,9 +50,9 @@ function genDiff(string $pathToFile1, string $pathToFile2): string
 }
 
 
-//$pathToFile1 = __DIR__ . '/../file1.json';
+//$pathToFile1 = __DIR__ . '/file1.json';
 
-//$pathToFile2 = __DIR__ . '/../file2.json';
+//$pathToFile2 = __DIR__ . '/file2.json';
 
 
-//print_r(genDiff($pathToFile1, $pathToFile2));
+//echo genDiff($pathToFile1, $pathToFile2);
