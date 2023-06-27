@@ -8,3 +8,5 @@ check:
 	./vendor/bin/phpstan analyse --level 6 src bin
 fix:
 	phpcbf --standard=PSR12 src bin
+gendiff:
+	./bin/gendiff

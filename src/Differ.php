@@ -20,10 +20,13 @@ function getDataArray(string $data): mixed
     return $dataArray;
 }
 
+
+
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
-    $data1 = file_get_contents($pathToFile1);
-    $data2 = file_get_contents($pathToFile2);
+
+    $data1 = file_get_contents(__DIR__ . '/' . $pathToFile1);
+    $data2 = file_get_contents(__DIR__ . '/' . $pathToFile2);
 
     $dataArray1 = getDataArray($data1);
     $dataArray2 = getDataArray($data2);
