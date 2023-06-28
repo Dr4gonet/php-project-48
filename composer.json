@@ -1,6 +1,9 @@
 {
     "name": "hexlet/code",
     "description": "study project Differ",
+    "scripts": {
+        "phpcs": "phpcs"
+      },
     "autoload": {
         "files": [
             "src/Differ.php"
