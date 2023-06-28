@@ -11,6 +11,10 @@ jobs:
       # экшен, выполняет какую-то задачу
       # checkout – клонирует репозиторий
       - uses: actions/checkout@v3
+      - name: Установка shivammathur/setup-php
+        uses: shivammathur/setup-php@v2
+        with:
+         php-version: '8.2'
       # run – произвольная bash-команда
       - name: Run linter
         run: make lint
