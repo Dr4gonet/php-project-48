@@ -20,13 +20,24 @@ function getDataArray(string $data): mixed
     return $dataArray;
 }
 
-
+function getFullPath(string $path): string
+{
+    if (str_contains($path, '/')) {
+        // Если файл в не в корне проекта, то это абсолютный путь
+        return $path;
+    } else {
+        // Иначе (в корне проекта) строим полный путь относительно текущей директории
+        $full_path = __DIR__ . '/../' . $path;
+        return $full_path;
+    }
+}
 
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
 
-    $data1 = file_get_contents(__DIR__ . '/' . $pathToFile1);
-    $data2 = file_get_contents(__DIR__ . '/' . $pathToFile2);
+    $data1 = file_get_contents(getFullPath($pathToFile1));
+    $data2 = file_get_contents(getFullPath($pathToFile2));
+
 
     $dataArray1 = getDataArray($data1);
     $dataArray2 = getDataArray($data2);
@@ -51,11 +62,3 @@ function genDiff(string $pathToFile1, string $pathToFile2): string
 
     return '{' . "\n" . implode("\n", $result) . "\n" . '}' . "\n";
 }
-
-
-//$pathToFile1 = __DIR__ . '/file1.json';
-
-//$pathToFile2 = __DIR__ . '/file2.json';
-
-
-//echo genDiff($pathToFile1, $pathToFile2);
