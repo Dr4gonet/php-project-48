@@ -15,7 +15,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
          php-version: '8.2'
-      # run – произвольная bash-команда
+      # run – произвольная bash-команда   
+      - name: Composer install
+        run: make install
       - name: Run linter
         run: make lint
       - name: Run check
