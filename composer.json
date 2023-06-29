@@ -12,6 +12,9 @@
             "email": "dr4gonet@yandex.ru"
         }
     ],
+    "scripts": {
+        "test": "phpunit tests"
+      },
     "bin": [
         "bin/gendiff"
     ],
