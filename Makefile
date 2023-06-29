@@ -3,7 +3,7 @@ install:
 validate:
 	composer validate
 lint:
-	composer run-script  phpcs -- --standard=PSR12 src bin tests
+	composer exec --verbose phpcs -- --standard=PSR12 src bin tests
 check:
 	./vendor/bin/phpstan analyse --level 6 src bin tests
 fix:
