@@ -14,7 +14,10 @@ class DifferTest extends TestCase
         $this->assertEquals('src/file.json', Differ\getFullPath($path1));
 
         $path2 = 'file.json';
-        $this->assertEquals('/home/dr4gonet/projects/php-project-48/src/../file.json', Differ\getFullPath($path2));
+        $projectFolder = getcwd();
+        $result2 = $projectFolder . '/src/../' . $path2;
+
+        $this->assertEquals($result2, Differ\getFullPath($path2));
     }
 
     public function testGetDataArray(): void
