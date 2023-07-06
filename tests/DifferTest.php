@@ -7,45 +7,6 @@ use Differ\Differ;
 
 class DifferTest extends TestCase
 {
-    public function testGetFullPath(): void
-    {
-
-        $path1 = 'src/file.json';
-        $this->assertEquals('src/file.json', Differ\getFullPath($path1));
-
-        $path2 = 'file.json';
-        $projectFolder = getcwd();
-        $result2 = $projectFolder . '/src/../' . $path2;
-
-        $this->assertEquals($result2, Differ\getFullPath($path2));
-    }
-
-    public function testGetDataArray(): void
-    {
-
-        $data1 = '{
-            "host": "hexlet.io",
-            "timeout": 50,
-            "proxy": "123.234.53.22",
-            "follow": false,
-            "bool": true,
-            "null": null,
-            "test": "hello"
-          }';
-
-        $result1 = [
-            'host' => 'hexlet.io',
-            'timeout' => 50,
-            'proxy' => '123.234.53.22',
-            'follow' => 'false',
-            'bool' => 'true',
-            'null' => 'null',
-            'test' => 'hello',
-        ];
-
-        $this->assertEquals($result1, Differ\getDataArray($data1));
-    }
-
     public function testGenDiff(): void
     {
         $pathToFile1 = 'tests/fixtures/file1.json';
@@ -60,5 +21,18 @@ class DifferTest extends TestCase
 }
 ';
         $this->assertEquals($result1, Differ\genDiff($pathToFile1, $pathToFile2));
+
+        $pathToFile3 = 'tests/fixtures/file1.yml';
+        $pathToFile4 = 'tests/fixtures/file2.yml';
+        $result2 = '{
+-follow: false
+ host: hexlet.io
+-proxy: 123.234.53.22
+-timeout: 50
++timeout: 20
++verbose: true
+}
+';
+        $this->assertEquals($result2, Differ\genDiff($pathToFile3, $pathToFile4));
     }
 }

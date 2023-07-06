@@ -2,8 +2,12 @@
     "name": "hexlet/code",
     "description": "study project Differ",
     "autoload": {
+        "psr-4": {
+            "Hexlet\\Code\\": "src/"
+        },
         "files": [
-            "src/Differ.php"
+            "src/Differ.php",
+            "src/Parsers.php"
         ]
     },
     "authors": [
@@ -20,7 +24,8 @@
     ],
     "require": {
         "docopt/docopt": "^1.0",
-        "lstrojny/functional-php": "^1.17"
+        "lstrojny/functional-php": "^1.17",
+        "symfony/yaml": "^6.3"
     },
     "require-dev": {
         "phpstan/phpstan": "^1.10",
