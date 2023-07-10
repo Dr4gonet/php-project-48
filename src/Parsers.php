@@ -13,7 +13,23 @@ function getRealPath(string $pathToFile): string
     return $fullPath;
 }
 
-function parse(string $pathToFile): mixed
+function getFormattedArray(mixed $dataArray): mixed
+{
+    return array_map(function ($value) {
+        if ($value === false) {
+            return 'false';
+        } elseif ($value === true) {
+            return 'true';
+        } elseif (is_null($value)) {
+            return 'null';
+        } elseif (is_array($value)) {
+            return getFormattedArray($value); // Рекурсивный вызов для обработки вложенных массивов
+        }
+        return $value;
+    }, $dataArray);
+}
+
+function getParseCode(string $pathToFile): mixed
 {
     $fullPath = getRealPath($pathToFile);
     $data = file_get_contents($fullPath);
@@ -23,20 +39,11 @@ function parse(string $pathToFile): mixed
     if ($extension === 'yaml' || $extension === 'yml') {
         $dataArray = Yaml::parse($data);
     }
-
     if ($extension === 'json') {
         $dataArray = json_decode($data, true);
     }
 
-    $resultArray = array_map(function ($value) {
-        if ($value === false) {
-            return 'false';
-        } elseif ($value === true) {
-            return 'true';
-        } elseif (is_null($value)) {
-            return 'null';
-        }
-        return $value;
-    }, $dataArray);
+    $resultArray = getFormattedArray($dataArray);
+
     return $resultArray;
 }
