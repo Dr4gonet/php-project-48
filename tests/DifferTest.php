@@ -18,7 +18,8 @@ class DifferTest extends TestCase
   - timeout: 50
   + timeout: 20
   + verbose: true
-}';
+}
+';
         $this->assertEquals($result1, Differ\genDiff($pathToFile1, $pathToFile2));
 
         $pathToFile3 = 'tests/fixtures/file3.yaml';
@@ -30,7 +31,8 @@ class DifferTest extends TestCase
   - timeout: 50
   + timeout: 20
   + verbose: true
-}';
+}
+';
         $this->assertEquals($result2, Differ\genDiff($pathToFile3, $pathToFile4));
 
         $pathToFile5 = 'tests/fixtures/file1.json';
@@ -78,7 +80,8 @@ class DifferTest extends TestCase
         }
         fee: 100500
     }
-}';
+}
+';
         $this->assertEquals($result3, Differ\genDiff($pathToFile5, $pathToFile6));
 
         $pathToFile7 = 'tests/fixtures/file1.yml';
@@ -126,7 +129,8 @@ class DifferTest extends TestCase
         }
         fee: 100500
     }
-}';
+}
+';
         $this->assertEquals($result4, Differ\genDiff($pathToFile7, $pathToFile8));
     }
 }
