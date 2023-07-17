@@ -13,7 +13,7 @@ class DifferTest extends TestCase
         $pathToFile2 = 'tests/fixtures/file4.json';
         $result1 = '{
   - follow: false
-   host: hexlet.io
+    host: hexlet.io
   - proxy: 123.234.53.22
   - timeout: 50
   + timeout: 20
@@ -25,7 +25,7 @@ class DifferTest extends TestCase
         $pathToFile4 = 'tests/fixtures/file4.yaml';
         $result2 = '{
   - follow: false
-   host: hexlet.io
+    host: hexlet.io
   - proxy: 123.234.53.22
   - timeout: 50
   + timeout: 20
@@ -36,9 +36,9 @@ class DifferTest extends TestCase
         $pathToFile5 = 'tests/fixtures/file1.json';
         $pathToFile6 = 'tests/fixtures/file2.json';
         $result3 = '{
-   common: {
+    common: {
       + follow: false
-       setting1: Value 1
+        setting1: Value 1
       - setting2: 200
       - setting3: true
       + setting3: null
@@ -46,19 +46,19 @@ class DifferTest extends TestCase
       + setting5: {
             key5: value5
         }
-      setting6: {
+        setting6: {
             doge: {
-              - wow:
+              - wow: 
               + wow: so much
             }
             key: value
           + ops: vops
         }
     }
-   group1: {
+    group1: {
       - baz: bas
       + baz: bars
-       foo: bar
+        foo: bar
       - nest: {
             key: value
         }
@@ -77,17 +77,16 @@ class DifferTest extends TestCase
             }
         }
         fee: 100500
-    }       
-}
-';
+    }
+}';
         $this->assertEquals($result3, Differ\genDiff($pathToFile5, $pathToFile6));
 
         $pathToFile7 = 'tests/fixtures/file1.yml';
         $pathToFile8 = 'tests/fixtures/file2.yml';
         $result4 = '{
-   common: {
+    common: {
       + follow: false
-       setting1: Value 1
+        setting1: Value 1
       - setting2: 200
       - setting3: true
       + setting3: null
@@ -95,19 +94,19 @@ class DifferTest extends TestCase
       + setting5: {
             key5: value5
         }
-      setting6: {
+        setting6: {
             doge: {
-              - wow:
+              - wow: 
               + wow: so much
             }
             key: value
           + ops: vops
         }
     }
-   group1: {
+    group1: {
       - baz: bas
       + baz: bars
-       foo: bar
+        foo: bar
       - nest: {
             key: value
         }
@@ -126,9 +125,8 @@ class DifferTest extends TestCase
             }
         }
         fee: 100500
-    }       
-}
-';
+    }
+}';
         $this->assertEquals($result4, Differ\genDiff($pathToFile7, $pathToFile8));
     }
 }

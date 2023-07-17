@@ -4,35 +4,6 @@ namespace Differ\Differ;
 
 use function Differ\Parsers\getParseCode;
 
-function compareArrays(mixed $array1, mixed $array2): mixed
-{
-    $result = [];
-    $keys = array_unique(array_merge(array_keys($array1), array_keys($array2)));
-
-    sort($keys, SORT_REGULAR);
-
-    foreach ($keys as $key) {
-        if (
-            array_key_exists($key, $array1) && array_key_exists($key, $array2)
-            && is_array($array1[$key]) && is_array($array2[$key])
-        ) {
-            $nestedComparison = compareArrays($array1[$key], $array2[$key]);
-            $result[' ' . $key] = $nestedComparison;
-        } elseif (!array_key_exists($key, $array2)) {
-            $result['- ' . $key] = $array1[$key];
-        } elseif (!array_key_exists($key, $array1)) {
-            $result['+ ' . $key] = $array2[$key];
-        } elseif ($array1[$key] !== $array2[$key]) {
-            $result['- ' . $key] = $array1[$key];
-            $result['+ ' . $key] = $array2[$key];
-        } else {
-            $result[' ' . $key] = $array1[$key];
-        }
-    }
-
-    return $result;
-}
-
 function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
 {
     $result = [];
@@ -93,8 +64,7 @@ function toString(string $value): string
     return trim(var_export($value, true), "'");
 }
 
-
-function stringify(mixed $value, string $replacer = ' ', int $spaceCount = 4): string
+function getStringsTree(mixed $value, string $replacer = ' ', int $spaceCount = 4): string
 {
     if (!is_array($value)) {
         return toString($value);
@@ -108,15 +78,30 @@ function stringify(mixed $value, string $replacer = ' ', int $spaceCount = 4): s
 
         $indentLength = $spaceCount * $depth;
         $shiftToLeft = 2;
-        $indent = str_repeat($replacer, $indentLength - $shiftToLeft);
+        $indent = str_repeat($replacer, $indentLength);
+        $indentStr = str_repeat($replacer, $indentLength - $shiftToLeft);
         $bracketIndent = str_repeat($replacer, $indentLength - $spaceCount);
 
         $strings = array_map(
-            fn ($key, $item) => $indent . $key . ': ' . $iter($item, $depth + 1),
-            array_keys($currentValue),
-            $currentValue
-        );
+            function ($item, $key) use ($indent, $indentStr, $iter, $depth) {
+                if (!is_array($item)) {
+                    return $indent . $key . ': ' . $iter($item, $depth + 1);
+                }
+                if (!array_key_exists('type', $item)) {
+                    return $indent . $key . ': ' . $iter($item, $depth + 1);
+                }
+                if ($item['type'] === 'added') {
+                    return $indentStr . '+ ' . $item['key'] . ': ' . $iter($item['value'], $depth + 1);
+                }
+                if ($item['type'] === 'deleted') {
+                    return $indentStr . '- ' . $item['key'] . ': ' . $iter($item['value'], $depth + 1);
+                }
 
+                return $indent . $item['key'] . ': ' . $iter($item['value'], $depth + 1);
+            },
+            $currentValue,
+            array_keys($currentValue)
+        );
         $result = ['{', ...$strings, $bracketIndent . '}'];
 
         return implode("\n", $result);
@@ -124,17 +109,15 @@ function stringify(mixed $value, string $replacer = ' ', int $spaceCount = 4): s
     return $iter($value, 1);
 }
 
-
-
 function genDiff(string $pathToFile1, string $pathToFile2): string
 {
 
     $dataArray1 = getParseCode($pathToFile1);
     $dataArray2 = getParseCode($pathToFile2);
 
-    $diffArray = compareArrays($dataArray1, $dataArray2);
+    $diffArray = getArrayComparisonTree($dataArray1, $dataArray2);
 
-    $result = stringify($diffArray, $replacer = ' ', $spaceCount = 4);
+    $result = getStringsTree($diffArray, $replacer = ' ', $spaceCount = 4);
 
     return $result;
 }
