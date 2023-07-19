@@ -37,100 +37,19 @@ class DifferTest extends TestCase
 
         $pathToFile5 = 'tests/fixtures/file1.json';
         $pathToFile6 = 'tests/fixtures/file2.json';
-        $result3 = '{
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: null
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
-        }
-        setting6: {
-            doge: {
-              - wow: 
-              + wow: so much
-            }
-            key: value
-          + ops: vops
-        }
-    }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
-        }
-      + nest: str
-    }
-  - group2: {
-        abc: 12345
-        deep: {
-            id: 45
-        }
-    }
-  + group3: {
-        deep: {
-            id: {
-                number: 45
-            }
-        }
-        fee: 100500
-    }
-}
-';
+        $result3 = file_get_contents('tests/fixtures/formatStylish.txt');
+
         $this->assertEquals($result3, Differ\genDiff($pathToFile5, $pathToFile6));
 
         $pathToFile7 = 'tests/fixtures/file1.yml';
         $pathToFile8 = 'tests/fixtures/file2.yml';
-        $result4 = '{
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: null
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
-        }
-        setting6: {
-            doge: {
-              - wow: 
-              + wow: so much
-            }
-            key: value
-          + ops: vops
-        }
-    }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
-        }
-      + nest: str
-    }
-  - group2: {
-        abc: 12345
-        deep: {
-            id: 45
-        }
-    }
-  + group3: {
-        deep: {
-            id: {
-                number: 45
-            }
-        }
-        fee: 100500
-    }
-}
-';
-        $this->assertEquals($result4, Differ\genDiff($pathToFile7, $pathToFile8));
+
+        $this->assertEquals($result3, Differ\genDiff($pathToFile7, $pathToFile8, 'stylish'));
+
+        $result4 = file_get_contents('tests/fixtures/formatPlain.txt');
+
+        $this->assertEquals($result4, Differ\genDiff($pathToFile5, $pathToFile6, 'plain'));
+
+        $this->assertEquals($result4, Differ\genDiff($pathToFile7, $pathToFile8, 'plain'));
     }
 }
