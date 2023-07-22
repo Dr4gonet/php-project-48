@@ -22,7 +22,7 @@ json
 
 ### Different formats are output by command:
 
-./bin/gendiff --format <format> <path to file 1> <path to file 2>
+./bin/gendiff --format <format option> <path to file 1> <path to file 2>
 
 ### Requirements:
 
