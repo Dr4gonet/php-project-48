@@ -2,24 +2,51 @@
 
 namespace Differ\Formatters\Plain;
 
-function getPropertyChange(mixed $diffArray): string
+function normalizeValue(mixed $value): mixed
 {
-    $result = array_map(function ($value) {
-        if ($value['type'] === 'immutable') {
-            return null;
+    if (!is_array($value)) {
+        if ($value === 'null' || $value === 'true' || $value === 'false') {
+            return $value;
         }
-        if ($value['type'] === 'deleted') {
-            return "Property '" . $value['key'] . "' was removed";
+        if (is_numeric($value)) {
+            return $value;
         }
-        if ($value['type'] === 'added') {
-            return "Property '" . $value['key'] . "' was added with value: " . $value['value'];
-        }
-        if ($value['type'] === 'updated') {
-            return "Property '" . $value['key'] . "' was updated. From " . $value['value1'] . ' to ' . $value['value2'];
+        return "'{$value}'";
+    }
+    return "[complex value]";
+}
+
+
+function getPropertyChange(mixed $diffArray, string $parentKey = ''): string
+{
+    $result = array_map(function ($node) use ($parentKey) {
+
+        $type = $node['type'];
+        $key =  $node['key'];
+        $value1 = $node['value1'];
+        $value2 = $node['value2'];
+
+        $newKey = $parentKey === '' ? $key : $parentKey . '.' . $key;
+
+        switch ($type) {
+            case 'nested':
+                return getPropertyChange($value1, $newKey);
+            case 'added':
+                $normalizeValue = normalizeValue($value2);
+                return "Property '" . $newKey . "' was added with value: " . $normalizeValue;
+            case 'deleted':
+                return "Property '" . $newKey . "' was removed";
+            case 'updated':
+                $normalizeValue1 = normalizeValue($value1);
+                $normalizeValue2 = normalizeValue($value2);
+                return "Property '" . $newKey . "' was updated. From " . $normalizeValue1 . ' to ' . $normalizeValue2;
+            case 'immutable':
+                break;
+            default:
+                throw new \Exception("Unknown node type: {$type}");
         }
     }, $diffArray);
-
     $result = array_filter($result); // Удаляем пустые значения из массива
 
-    return  implode("\n", $result);
+    return implode("\n", $result);
 }
