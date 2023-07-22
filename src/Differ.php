@@ -12,5 +12,5 @@ function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'sty
     $dataArray2 = getParseCode($pathToFile2);
 
     $result = getFormatter($dataArray1, $dataArray2, $format);
-    return $result . "\n";
+    return $result;
 }
