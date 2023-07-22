@@ -51,5 +51,11 @@ class DifferTest extends TestCase
         $this->assertEquals($result4, Differ\genDiff($pathToFile5, $pathToFile6, 'plain'));
 
         $this->assertEquals($result4, Differ\genDiff($pathToFile7, $pathToFile8, 'plain'));
+
+        $result5 = file_get_contents('tests/fixtures/formatJson.txt');
+
+        $this->assertEquals($result5, Differ\genDiff($pathToFile5, $pathToFile6, 'json'));
+
+        $this->assertEquals($result5, Differ\genDiff($pathToFile7, $pathToFile8, 'json'));
     }
 }

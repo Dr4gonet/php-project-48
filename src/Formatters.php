@@ -4,6 +4,7 @@ namespace Differ\Formatters;
 
 use function Differ\Formatters\Stylish\getStringsTree;
 use function Differ\Formatters\Plain\getPropertyChange;
+use function Differ\Formatters\Json\getJsonFormat;
 
 function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
 {
@@ -70,6 +71,9 @@ function getFormatter(mixed $dataArray1, mixed $dataArray2, string $format): mix
     }
     if ($format === 'plain') {
         $result = getPropertyChange($diffArray);
+    }
+    if ($format === 'json') {
+        $result = getJsonFormat($diffArray);
     }
     return $result;
 }
