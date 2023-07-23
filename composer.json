@@ -2,9 +2,6 @@
     "name": "hexlet/code",
     "description": "study project Differ",
     "autoload": {
-        "psr-4": {
-            "Hexlet\\Code\\": "src/"
-        },
         "files": [
             "src/Differ.php",
             "src/Parsers.php",
@@ -22,7 +19,7 @@
     ],
     "scripts": {
         "test": "phpunit tests"
-      },
+    },
     "bin": [
         "bin/gendiff"
     ],

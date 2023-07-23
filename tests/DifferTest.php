@@ -2,58 +2,58 @@
 
 namespace Differ\Phpunit\Tests\DifferTest;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Differ\Differ;
 
-class DifferTest extends TestCase
+final class DifferTest extends TestCase
 {
-    public function testGenDiff(): void
+    public static function additionProvider(): mixed
     {
-        $pathToFile1 = 'tests/fixtures/file3.json';
-        $pathToFile2 = 'tests/fixtures/file4.json';
-        $result1 = '{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}';
-        $this->assertEquals($result1, Differ\genDiff($pathToFile1, $pathToFile2));
+        return [
+        [
+        'tests/fixtures/file1.json',
+        'tests/fixtures/file2.json',
+        'stylish',
+        'tests/fixtures/formatStylish.txt'
+        ],
+        [
+        'tests/fixtures/file1.yml',
+        'tests/fixtures/file2.yml',
+        'stylish',
+        'tests/fixtures/formatStylish.txt'
+        ],
+        [
+        'tests/fixtures/file1.json',
+        'tests/fixtures/file2.json',
+        'plain',
+        'tests/fixtures/formatPlain.txt'
+        ],
+        [
+        'tests/fixtures/file1.yml',
+        'tests/fixtures/file2.yml',
+        'plain',
+        'tests/fixtures/formatPlain.txt'
+        ],
+        [
+        'tests/fixtures/file1.json',
+        'tests/fixtures/file2.json',
+        'json',
+        'tests/fixtures/formatJson.txt'
+        ],
+        [
+        'tests/fixtures/file1.yml',
+        'tests/fixtures/file2.yml',
+        'json',
+        'tests/fixtures/formatJson.txt'
+        ],
+        ];
+    }
 
-        $pathToFile3 = 'tests/fixtures/file3.yaml';
-        $pathToFile4 = 'tests/fixtures/file4.yaml';
-        $result2 = '{
-  - follow: false
-    host: hexlet.io
-  - proxy: 123.234.53.22
-  - timeout: 50
-  + timeout: 20
-  + verbose: true
-}';
-        $this->assertEquals($result2, Differ\genDiff($pathToFile3, $pathToFile4));
-
-        $pathToFile5 = 'tests/fixtures/file1.json';
-        $pathToFile6 = 'tests/fixtures/file2.json';
-        $result3 = file_get_contents('tests/fixtures/formatStylish.txt');
-
-        $this->assertEquals($result3, Differ\genDiff($pathToFile5, $pathToFile6));
-
-        $pathToFile7 = 'tests/fixtures/file1.yml';
-        $pathToFile8 = 'tests/fixtures/file2.yml';
-
-        $this->assertEquals($result3, Differ\genDiff($pathToFile7, $pathToFile8, 'stylish'));
-
-        $result4 = file_get_contents('tests/fixtures/formatPlain.txt');
-
-        $this->assertEquals($result4, Differ\genDiff($pathToFile5, $pathToFile6, 'plain'));
-
-        $this->assertEquals($result4, Differ\genDiff($pathToFile7, $pathToFile8, 'plain'));
-
-        $result5 = file_get_contents('tests/fixtures/formatJson.txt');
-
-        $this->assertEquals($result5, Differ\genDiff($pathToFile5, $pathToFile6, 'json'));
-
-        $this->assertEquals($result5, Differ\genDiff($pathToFile7, $pathToFile8, 'json'));
+    #[DataProvider('additionProvider')]
+    public function testGenDiff(string $pathToFile1, string $pathToFile2, string $format, string $pathToExpected): void
+    {
+        $expected = file_get_contents($pathToExpected);
+        $this->assertSame($expected, Differ\genDiff($pathToFile1, $pathToFile2, $format));
     }
 }
