@@ -33,17 +33,20 @@ function getParseCode(string $pathToFile): mixed
 {
     $fullPath = getRealPath($pathToFile);
     $data = file_get_contents($fullPath);
-    $extension = pathinfo($fullPath)['extension'];
-    $dataArray = [];
+    $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
 
-    if ($extension === 'yaml' || $extension === 'yml') {
-        $dataArray = Yaml::parse($data);
-    }
-    if ($extension === 'json') {
-        $dataArray = json_decode($data, true);
+    if ($data === false) {
+        throw new \Exception("Can't read file");
     }
 
-    $resultArray = getFormattedArray($dataArray);
-
-    return $resultArray;
+    switch ($extension) {
+        case 'json':
+            return getFormattedArray(json_decode($data, true));
+        case 'yml':
+            return getFormattedArray(Yaml::parse($data));
+        case 'yaml':
+            return getFormattedArray(Yaml::parse($data));
+        default:
+            throw new \Exception('Unknown extension ' . $extension);
+    }
 }

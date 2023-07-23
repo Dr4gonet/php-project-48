@@ -19,7 +19,7 @@ function normalizeValue(mixed $value): mixed
 
 function getPropertyChange(mixed $diffArray, string $parentKey = ''): string
 {
-    $result = array_map(function ($node) use ($parentKey) {
+    $propertiesChange = array_map(function ($node) use ($parentKey) {
 
         $type = $node['type'];
         $key =  $node['key'];
@@ -46,7 +46,7 @@ function getPropertyChange(mixed $diffArray, string $parentKey = ''): string
                 throw new \Exception("Unknown node type: {$type}");
         }
     }, $diffArray);
-    $result = array_filter($result); // Удаляем пустые значения из массива
+    $result = array_filter($propertiesChange); // Удаляем пустые значения из массива
 
     return implode("\n", $result);
 }
