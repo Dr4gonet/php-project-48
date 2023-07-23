@@ -5,11 +5,13 @@ namespace Differ\Formatters;
 use function Differ\Formatters\Stylish\getStringsTree;
 use function Differ\Formatters\Plain\getPropertyChange;
 use function Differ\Formatters\Json\getJsonFormat;
+use function Functional\sort;
 
 function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
 {
     $keys = array_unique(array_merge(array_keys($array1), array_keys($array2)));
-    sort($keys, SORT_REGULAR);
+
+    $sortedKeys = sort($keys, fn ($left, $right) => strcmp($left, $right));
 
     $result = array_map(
         function ($key) use ($array1, $array2) {
@@ -55,25 +57,25 @@ function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
                 ];
             }
         },
-        $keys
+        $sortedKeys
     );
 
     return $result;
 }
 
 
-function getFormatter(mixed $dataArray1, mixed $dataArray2, string $format): mixed
+function getFormatter(mixed $dataArray1, mixed $dataArray2, string $format): string
 {
-    $result = '';
     $diffArray = getArrayComparisonTree($dataArray1, $dataArray2);
-    if ($format === 'stylish') {
-        $result = getStringsTree($diffArray, $replacer = ' ', $spaceCount = 4);
+
+    switch ($format) {
+        case 'stylish':
+            return getStringsTree($diffArray, $replacer = ' ', $spaceCount = 4);
+        case 'plain':
+            return getPropertyChange($diffArray);
+        case 'json':
+            return getJsonFormat($diffArray);
+        default:
+            throw new \Exception('Unknown format ' . $format);
     }
-    if ($format === 'plain') {
-        $result = getPropertyChange($diffArray);
-    }
-    if ($format === 'json') {
-        $result = getJsonFormat($diffArray);
-    }
-    return $result;
 }
