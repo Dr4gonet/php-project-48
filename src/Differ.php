@@ -62,6 +62,42 @@ function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
     return $result;
 }
 
+function getRealPath(string $pathToFile): string
+{
+    $fullPath = realpath($pathToFile);
+    if ($fullPath === false) {
+        throw new \Exception("File does not exists");
+    }
+    return $fullPath;
+}
+
+function getFormattedArray(mixed $dataArray): mixed
+{
+    return array_map(function ($value) {
+        if ($value === false) {
+            return 'false';
+        } elseif ($value === true) {
+            return 'true';
+        } elseif (is_null($value)) {
+            return 'null';
+        } elseif (is_array($value)) {
+            return getFormattedArray($value); // Рекурсивный вызов для обработки вложенных массивов
+        }
+        return $value;
+    }, $dataArray);
+}
+
+function getExtension(string $pathToFile): string
+{
+    $fullPath = getRealPath($pathToFile);
+    return pathinfo($fullPath, PATHINFO_EXTENSION);
+}
+
+function getData(string $pathToFile): mixed
+{
+    $fullPath = getRealPath($pathToFile);
+    return file_get_contents($fullPath);
+}
 
 function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
