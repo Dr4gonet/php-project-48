@@ -2,7 +2,6 @@
 
 namespace Differ\Differ;
 
-use function Differ\Parsers\getParseCode;
 use function Differ\Formatters\getFormatter;
 use function Functional\sort;
 
@@ -12,7 +11,7 @@ function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
 
     $sortedKeys = sort($keys, fn ($left, $right) => strcmp($left, $right));
 
-    $result = array_map(
+    return array_map(
         function ($key) use ($array1, $array2) {
             if (
                 array_key_exists($key, $array1) && array_key_exists($key, $array2)
@@ -58,8 +57,6 @@ function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
         },
         $sortedKeys
     );
-
-    return $result;
 }
 
 function getRealPath(string $pathToFile): string
@@ -71,29 +68,13 @@ function getRealPath(string $pathToFile): string
     return $fullPath;
 }
 
-function getFormattedArray(mixed $dataArray): mixed
-{
-    return array_map(function ($value) {
-        if ($value === false) {
-            return 'false';
-        } elseif ($value === true) {
-            return 'true';
-        } elseif (is_null($value)) {
-            return 'null';
-        } elseif (is_array($value)) {
-            return getFormattedArray($value); // Рекурсивный вызов для обработки вложенных массивов
-        }
-        return $value;
-    }, $dataArray);
-}
-
 function getExtension(string $pathToFile): string
 {
     $fullPath = getRealPath($pathToFile);
     return pathinfo($fullPath, PATHINFO_EXTENSION);
 }
 
-function getData(string $pathToFile): mixed
+function getDataFile(string $pathToFile): mixed
 {
     $fullPath = getRealPath($pathToFile);
     return file_get_contents($fullPath);
@@ -101,9 +82,5 @@ function getData(string $pathToFile): mixed
 
 function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
-
-    $data1 = getParseCode($pathToFile1);
-    $data2 = getParseCode($pathToFile2);
-
-    return getFormatter($data1, $data2, $format);
+    return getFormatter($pathToFile1, $pathToFile2, $format);
 }
