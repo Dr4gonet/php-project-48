@@ -7,7 +7,7 @@ function toString(string $value): string
     return trim(var_export($value, true), "'");
 }
 
-function getStringsTree(mixed $value, string $replacer = ' ', int $spaceCount = 4): string
+function getFormat(mixed $value, string $replacer = ' ', int $spaceCount = 4): string
 {
     if (!is_array($value)) {
         return toString($value);
@@ -41,7 +41,7 @@ function getStringsTree(mixed $value, string $replacer = ' ', int $spaceCount = 
                 }
                 if ($item['type'] === 'updated') {
                     return  $indentForMutableType . '- ' . $item['key'] . ': ' . $iter($item['value1'], $depth + 1) .
-                    "\n" .  $indentForMutableType . '+ ' . $item['key'] . ': ' . $iter($item['value2'], $depth + 1);
+                        "\n" .  $indentForMutableType . '+ ' . $item['key'] . ': ' . $iter($item['value2'], $depth + 1);
                 }
                 return $indentForImmutableType . $item['key'] . ': ' . $iter($item['value1'], $depth + 1);
             },

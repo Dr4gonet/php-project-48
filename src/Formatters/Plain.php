@@ -17,7 +17,7 @@ function normalizeValue(mixed $value): mixed
 }
 
 
-function getPropertyChange(mixed $diffArray, string $parentKey = ''): string
+function getFormat(mixed $diffArray, string $parentKey = ''): string
 {
     $propertiesChange = array_map(function ($node) use ($parentKey) {
 
@@ -30,7 +30,7 @@ function getPropertyChange(mixed $diffArray, string $parentKey = ''): string
 
         switch ($type) {
             case 'nested':
-                return getPropertyChange($value1, $newKey);
+                return getFormat($value1, $newKey);
             case 'added':
                 $normalizeValue = normalizeValue($value2);
                 return "Property '" . $newKey . "' was added with value: " . $normalizeValue;

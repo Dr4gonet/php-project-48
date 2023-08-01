@@ -2,9 +2,9 @@
 
 namespace Differ\Formatters;
 
-use function Differ\Formatters\Stylish\getStringsTree;
-use function Differ\Formatters\Plain\getPropertyChange;
-use function Differ\Formatters\Json\getJsonFormat;
+use function Differ\Formatters\Stylish\getFormat as getFormatStylish;
+use function Differ\Formatters\Plain\getFormat as getFormatPlain;
+use function Differ\Formatters\Json\getFormat as getFormatJson;
 use function Differ\Parsers\getParseCode;
 use function Differ\Differ\getExtension;
 use function Differ\Differ\getDataFile;
@@ -42,11 +42,11 @@ function getFormatter(string $pathToFile1, string $pathToFile2, string $format):
 
     switch ($format) {
         case 'stylish':
-            return getStringsTree($diffArray, $replacer = ' ', $spaceCount = 4);
+            return getFormatStylish($diffArray, $replacer = ' ', $spaceCount = 4);
         case 'plain':
-            return getPropertyChange($diffArray);
+            return getFormatPlain($diffArray);
         case 'json':
-            return getJsonFormat($diffArray);
+            return getFormatJson($diffArray);
         default:
             throw new \Exception('Unknown format ' . $format);
     }
