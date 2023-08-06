@@ -4,6 +4,7 @@ namespace Differ\Differ;
 
 use function Differ\Formatters\getFormatter;
 use function Functional\sort;
+use function Differ\Parsers\getParseCode;
 
 function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
 {
@@ -49,7 +50,7 @@ function getArrayComparisonTree(mixed $array1, mixed $array2): mixed
             } else {
                 return [
                     'key' => $key,
-                    'type' => 'immutable',
+                    'type' => 'unchanged',
                     'value1' => $array1[$key],
                     'value2' => $array2[$key],
                 ];
@@ -80,7 +81,35 @@ function getDataFile(string $pathToFile): mixed
     return file_get_contents($fullPath);
 }
 
+//функция форматирует значения входных массивов до сравнения, поэтому не относится к форматтерам:
+//(Форматтеры форматируют массивы на выходе)
+function getNoramalizeValue(mixed $dataArray): mixed
+{
+    return array_map(function ($value) {
+        if ($value === false) {
+            return 'false';
+        } elseif ($value === true) {
+            return 'true';
+        } elseif (is_null($value)) {
+            return 'null';
+        } elseif (is_array($value)) {
+            return getNoramalizeValue($value); // Рекурсивный вызов для обработки вложенных массивов
+        }
+        return $value;
+    }, $dataArray);
+}
+
+function getData(string $pathToFile): mixed
+{
+    $extension = getExtension($pathToFile);
+    $dataFile = getDataFile($pathToFile);
+    return getNoramalizeValue(getParseCode($dataFile, $extension));
+}
+
 function genDiff(string $pathToFile1, string $pathToFile2, string $format = 'stylish'): string
 {
-    return getFormatter($pathToFile1, $pathToFile2, $format);
+    $data1 = getData($pathToFile1);
+    $data2 = getData($pathToFile2);
+    $diff = getArrayComparisonTree($data1, $data2);
+    return getFormatter($diff, $format);
 }

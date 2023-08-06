@@ -5,10 +5,6 @@ namespace Differ\Formatters;
 use function Differ\Formatters\Stylish\getFormat as getFormatStylish;
 use function Differ\Formatters\Plain\getFormat as getFormatPlain;
 use function Differ\Formatters\Json\getFormat as getFormatJson;
-use function Differ\Parsers\getParseCode;
-use function Differ\Differ\getExtension;
-use function Differ\Differ\getDataFile;
-use function Differ\Differ\getArrayComparisonTree;
 
 function getFormattedArray(mixed $dataArray): mixed
 {
@@ -26,27 +22,15 @@ function getFormattedArray(mixed $dataArray): mixed
     }, $dataArray);
 }
 
-function getFormatter(string $pathToFile1, string $pathToFile2, string $format): string
+function getFormatter(mixed $diff, string $format): string
 {
-    $extension1 = getExtension($pathToFile1);
-    $extension2 = getExtension($pathToFile2);
-
-    $dataFile1 = getDataFile($pathToFile1);
-    $dataFile2 = getDataFile($pathToFile2);
-
-    $data1 = getFormattedArray(getParseCode($dataFile1, $extension1));
-    $data2 = getFormattedArray(getParseCode($dataFile2, $extension2));
-
-    $diffArray = getArrayComparisonTree($data1, $data2);
-
-
     switch ($format) {
         case 'stylish':
-            return getFormatStylish($diffArray, $replacer = ' ', $spaceCount = 4);
+            return getFormatStylish($diff);
         case 'plain':
-            return getFormatPlain($diffArray);
+            return getFormatPlain($diff);
         case 'json':
-            return getFormatJson($diffArray);
+            return getFormatJson($diff);
         default:
             throw new \Exception('Unknown format ' . $format);
     }

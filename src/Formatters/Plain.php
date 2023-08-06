@@ -11,7 +11,7 @@ function normalizeValue(mixed $value): mixed
         if (is_numeric($value)) {
             return $value;
         }
-        return "'{$value}'";
+        return "'$value'";
     }
     return "[complex value]";
 }
@@ -40,7 +40,7 @@ function getFormat(mixed $diffArray, string $parentKey = ''): string
                 $normalizeValue1 = normalizeValue($value1);
                 $normalizeValue2 = normalizeValue($value2);
                 return "Property '" . $newKey . "' was updated. From " . $normalizeValue1 . ' to ' . $normalizeValue2;
-            case 'immutable':
+            case 'unchanged':
                 break;
             default:
                 throw new \Exception("Unknown node type: {$type}");
