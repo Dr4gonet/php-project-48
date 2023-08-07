@@ -21,8 +21,11 @@ plain
 json
 
 ### Different formats are output by command:
+```
 
-./bin/gendiff --format <option> <path to file 1> <path to file 2>
+$ ./bin/gendiff --format <option> <path to file 1> <path to file 2>
+
+```
 
 ### Requirements:
 
@@ -31,14 +34,15 @@ PHP version 8.2.5
 Composer version 2.5.3
 
 ### Installation
+```
 
-Сlone the repository
+$ git clone git@github.com:Dr4gonet/php-project-48.git
 
-git@github.com:Dr4gonet/php-project-48.git
+$ cd php-project-48
 
-Go to "php-project-48" directory
+$ make install
 
-
+```
 
 [![asciicast](https://asciinema.org/a/2sAsjwyVGf6Kk3s8ONYYKM6qu.svg)](https://asciinema.org/a/2sAsjwyVGf6Kk3s8ONYYKM6qu)
 
