@@ -33,7 +33,7 @@ PHP version 8.2.5
 
 Composer version 2.5.3
 
-### Installation
+### Installation:
 ```
 
 $ git clone git@github.com:Dr4gonet/php-project-48.git

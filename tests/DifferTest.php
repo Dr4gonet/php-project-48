@@ -8,51 +8,30 @@ use Differ\Differ;
 
 final class DifferTest extends TestCase
 {
+    private function getFixtureFullPath(string $fixtureName): string
+    {
+        return 'tests/fixtures/' . $fixtureName;
+    }
+
     public static function additionProvider(): mixed
     {
         return [
-            [
-                'tests/fixtures/file1.json',
-                'tests/fixtures/file2.json',
-                'stylish',
-                'tests/fixtures/formatStylish.txt'
-            ],
-            [
-                'tests/fixtures/file1.yml',
-                'tests/fixtures/file2.yml',
-                'stylish',
-                'tests/fixtures/formatStylish.txt'
-            ],
-            [
-                'tests/fixtures/file1.json',
-                'tests/fixtures/file2.json',
-                'plain',
-                'tests/fixtures/formatPlain.txt'
-            ],
-            [
-                'tests/fixtures/file1.yml',
-                'tests/fixtures/file2.yml',
-                'plain',
-                'tests/fixtures/formatPlain.txt'
-            ],
-            [
-                'tests/fixtures/file1.json',
-                'tests/fixtures/file2.json',
-                'json',
-                'tests/fixtures/formatJson.txt'
-            ],
-            [
-                'tests/fixtures/file1.yml',
-                'tests/fixtures/file2.yml',
-                'json',
-                'tests/fixtures/formatJson.txt'
-            ],
+            ['file1.json', 'file2.json', 'stylish', 'formatStylish.txt'],
+            ['file1.yml', 'file2.yml', 'stylish', 'formatStylish.txt'],
+            ['file1.json', 'file2.json', 'plain', 'formatPlain.txt'],
+            ['file1.yml', 'file2.yml', 'plain', 'formatPlain.txt'],
+            ['file1.json', 'file2.json', 'json', 'formatJson.txt'],
+            ['file1.yml', 'file2.yml', 'json', 'formatJson.txt'],
         ];
     }
 
     #[DataProvider('additionProvider')]
-    public function testGenDiff(string $pathToFile1, string $pathToFile2, string $format, string $pathToExpected): void
+    public function testGenDiff(string $file1, string $file2, string $format, string $expected): void
     {
-        $this->assertStringEqualsFile($pathToExpected, Differ\genDiff($pathToFile1, $pathToFile2, $format));
+        $fixture1 = $this->getFixtureFullPath($file1);
+        $fixture2 = $this->getFixtureFullPath($file2);
+        $PathToExpected = $this->getFixtureFullPath($expected);
+
+        $this->assertStringEqualsFile($PathToExpected, Differ\genDiff($fixture1, $fixture2, $format));
     }
 }
